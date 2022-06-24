@@ -1,0 +1,33 @@
+<!-- Fichier de vue de la page d'accueil affichant tous les articles de blog -->
+
+<div class="blog__list">
+    <ul>
+        <?php
+            
+            while ($article = $articleData->fetch()) {
+                $userData = $pdo->selectId('users','id',$article->getCreatorId());
+                $userData->setFetchMode(PDO::FETCH_CLASS,'User');
+                $user = $userData->fetch();
+                echo "<div class='card mb-4' style='width: 60vw;'>
+                      <div class='card-body'>
+                      <h5 class='card-title'>";
+                        echo htmlentities($article->getTitle(), ENT_COMPAT,'Windows-1252');
+                echo "</h5>
+                      <h6 class='card-subtitle mb-4 text-muted'>
+                      Auteur: ";
+                echo  htmlspecialchars($user->getUserName())."<span class='span--modify'> " . htmlentities($article->getDatePublished(), ENT_COMPAT,'ISO-8859-15'). "</span>";
+                echo "</h6>
+                      <p class='ard-text'>";
+                echo  htmlentities($article->getIntros(), ENT_COMPAT,'ISO-8859-15') . "</p>";
+
+                echo "<p><a href='.\detail.php?id={$article->getId()}'>Lire plus...</a>
+                    <span class='span--modify'><a href='update-post.php?id={$article->getId()}'>modifier</a></span><span class='span--modify'><a href='delete-post.php?id={$article->getId()}'>effacer</a></p>";
+
+                echo "
+                      </div>
+                      </div>";
+            }      
+      
+        ?>
+    </ul>
+</div>
